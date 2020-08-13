@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Vocabulary Test</string>
+    <string name="main_title">単語テストアプリ</string>
+    <string name="i_spreadsheet">スプレッドシートから入力</string>
+    <string name="i_manual">手入力</string>
+    <string name="input">入力</string>
+    <string name="test">テスト</string>
+    <string name="note">単語帳</string>
+    <string name="ten">10問</string>
+    <string name="twenty">20問</string>
+    <string name="thirty">30問</string>
+    <string name="fifty">50問</string>
+    <string name="hundred">100問</string>
+    <string name="word">単語</string>
+    <string name="wordCount">語</string>
+    <string name="meaning">意味</string>
+    <string name="save">保存</string>
+    <string name="complete">完了</string>
+    <string name="check">確認</string>
+    <string name="null_wm_err">単語と意味を入力してください！</string>
+    <string name="null_word_err">単語を入力してください！</string>
+    <string name="null_meaning_err">意味を入力してください！</string>
+    <string name="title_activity_note">NoteActivity</string>
+</resources>
