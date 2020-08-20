@@ -10,16 +10,12 @@ import io.realm.RealmQuery
 import io.realm.RealmResults
 import java.lang.StringBuilder
 
-public class CustomRecyclerViewAdapter(realmResults : RealmResults<Dictionary>) : RecyclerView.Adapter<ViewHolder>() {
+class ResultRecyclerViewAdapter(realmResults: RealmResults<Dictionary>) : RecyclerView.Adapter<ViewHolder>() {
     private val rResults : RealmResults<Dictionary> = realmResults
-
     private val wordSet: MutableSet<String?> = mutableSetOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.word, parent, false)
-        val viewHolder = ViewHolder(view)
-        return viewHolder
+        return CustomRecyclerViewAdapter(rResults).onCreateViewHolder(parent, viewType)
     }
 
     override fun getItemCount(): Int {
@@ -29,35 +25,37 @@ public class CustomRecyclerViewAdapter(realmResults : RealmResults<Dictionary>) 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val result = rResults[position]
 
-        holder.resultImage?.visibility = View.INVISIBLE
-
         if (wordSet.add(result?.word)) {
-            holder.wordText?.setText(result?.word)
+            holder.wordText?.text = result?.word
 
             val rQuery : RealmQuery<Dictionary> = rResults.where()
+            //TestActivityの呼び出しの度にフィールドとなっている番号更新、
 
             val dict = rQuery.equalTo("word", result?.word).findAll()
 
             val buf = StringBuilder()
+
+            val booleanList = mutableListOf<Boolean>()
 
             var i = 0
 
             for (d in dict) {
                 if (i < dict.size) {
                     buf.append(d.meaning + ", ")
+                    booleanList.add(d.isCorrect)
                 }
             }
+
+            if (booleanList.all { it == true }) {
+                holder.resultImage?.setImageResource(R.drawable.mark_maru)
+            } else {
+                holder.resultImage?.setImageResource(R.drawable.mark_batsu)
+            }
+
 
             holder.meaningText?.text = convertMeaning(buf.toString())
 
             holder.itemView.setBackgroundColor(if (wordSet.size % 2 == 0) Color.LTGRAY else Color.WHITE)
-
-            holder.itemView.setOnClickListener{
-                val intent = Intent(it.context, EditWordActivity::class.java)
-                    .putExtra("word", holder.wordText?.text)
-                    .putExtra("meaning", holder.meaningText?.text)
-                it.context.startActivity(intent)
-            }
         } else {
             holder.wordText?.visibility = View.GONE
             holder.meaningText?.visibility = View.GONE

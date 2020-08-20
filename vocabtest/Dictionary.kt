@@ -11,5 +11,7 @@ open class Dictionary : RealmObject() {
 
     var meaning : String = ""
 
+    var isCorrect : Boolean = false
+
     var category : Long = 0
 }

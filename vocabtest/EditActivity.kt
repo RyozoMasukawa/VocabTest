@@ -8,6 +8,7 @@ import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_edit.*
+import java.lang.StringBuilder
 
 class EditActivity : AppCompatActivity() {
     private lateinit var realm : Realm
@@ -28,6 +29,7 @@ class EditActivity : AppCompatActivity() {
                     dictionary.meaning = meaningEdit.text.toString()
                 }
 
+                Toast.makeText(applicationContext, R.string.save_complete, Toast.LENGTH_SHORT).show()
             } else if (wordEdit.text.isNullOrEmpty() && meaningEdit.text.isNullOrEmpty()) {
                 Toast.makeText(applicationContext, R.string.null_wm_err, Toast.LENGTH_SHORT).show()
             } else if (meaningEdit.text.isNullOrEmpty()) {
@@ -41,7 +43,8 @@ class EditActivity : AppCompatActivity() {
         }
 
         completeBtn.setOnClickListener {
-            finish()
+            val i_complete = Intent(this, MainActivity::class.java)
+            startActivity(i_complete)
         }
 
         checkBtn.setOnClickListener {
@@ -54,4 +57,41 @@ class EditActivity : AppCompatActivity() {
         super.onDestroy()
         realm.close()
     }
+
+    private fun convertMeaning(meaning : String) : String{
+        val buf = StringBuilder()
+
+        var no = 0
+
+        var i = 0
+
+        val meanings : MutableSet<String> = mutableSetOf()
+
+        var tmp = StringBuilder()
+
+        while (i < meaning.length) {
+            while (i < meaning.length && !meaning[i].isLetter()) {
+                i++
+            }
+
+            if (i == meaning.length) {
+                break
+            }
+
+            while (i < meaning.length && meaning[i].isLetter()) {
+                tmp.append(meaning[i])
+                i++
+            }
+
+            meanings.add(tmp.toString())
+            tmp.clear()
+        }
+
+        for (meaning in meanings) {
+            buf.append((++no).toString() + "." + meaning + "\n")
+        }
+
+        return buf.toString()
+    }
+
 }
